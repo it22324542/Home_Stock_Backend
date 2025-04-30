@@ -1,35 +1,35 @@
 import express from "express";
 import cors from "cors";
-import 'dotenv/config';
-import bdConnect from "./config/dbConnect.js";
-import inventoryRoutes from "./routes/inventoryRoutes.js";
+import "dotenv/config";
 import dbConnect from "./config/dbConnect.js";
+import groceryRoutes from "./routes/groceryRoutes.js";
 
 const app = express();
 
-//app.use(cors());
+// Enhanced CORS configuration
 app.use(cors({
-  origin: "http://localhost:5175",
-  methods: "GET,POST,PUT,DELETE",
-  allowedHeaders: "Content-Type,Authorization",
+  origin: ["http://localhost:5173", "http://localhost:5175"], // Allow both ports
+  methods: ["GET", "POST", "PUT", "DELETE"],
+  allowedHeaders: ["Content-Type"],
   credentials: true
 }));
-app.use(express.json());
 
+// Body parser middleware
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
+
+// Connect to MongoDB
 dbConnect();
 
-app.use("/api/inventory", inventoryRoutes);
+// Routes
+app.use("/api/groceries", groceryRoutes);
+
+// Health check endpoint
+app.get("/api/health", (req, res) => {
+  res.status(200).json({ status: "Server is running" });
+});
 
 const PORT = process.env.PORT || 5000;
-app.get("/", (req, res) => {
-  try{
-    res.status(200).json({message : "hellow from backend"})
-  }catch(error){
-    console.log(error);
-  }
-});
-  
 app.listen(PORT, () => {
-    console.log(`Server is running on port ${PORT}`);
-    
-}); 
+  console.log(`Server running on port ${PORT}`);
+});
