@@ -3,6 +3,7 @@ import cors from "cors";
 import dotenv from "dotenv";
 import connectDB from "./config/dbConnect.js";  // Fixed function name
 import userRoutes from "./routes/userRoutes.js";  // Added user routes
+import essentialRoutes from "./routes/essentialRoutes.js";
 
 dotenv.config();
 connectDB();  // Connect to database before starting the server
@@ -11,6 +12,8 @@ const app = express();
 
 app.use(cors());
 app.use(express.json());
+
+app.use(essentialRoutes);
 
 // API Routes
 app.use("/api/users", userRoutes);  // Added user routes
