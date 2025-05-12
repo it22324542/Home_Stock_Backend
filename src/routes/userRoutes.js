@@ -4,10 +4,11 @@ import {
     loginUser,
     getUserProfile,
     updateUserProfile,
-    updatePassword
+    updatePassword,
+    logout
 } from "../controllers/userController.js";
-import { protect } from "../middlewares/authMiddleware.js";
-import { upload } from "../middlewares/uploadMiddleware.js"; // Import upload middleware
+import { auth } from "../middleware/auth.js";
+import { upload } from "../middlewares/uploadMiddleware.js";
 
 const router = express.Router();
 
@@ -16,8 +17,9 @@ router.post("/signup", registerUser);
 router.post("/signin", loginUser);
 
 // Protected routes (Require authentication)
-router.get("/profile", protect, getUserProfile);
-router.put("/profile", protect, upload.single("profilePic"), updateUserProfile);
-router.put("/password", protect, updatePassword);
+router.get("/profile", auth, getUserProfile);
+router.put("/profile", auth, upload.single("profilePic"), updateUserProfile);
+router.put("/password", auth, updatePassword);
+router.post("/logout", auth, logout);
 
 export default router;

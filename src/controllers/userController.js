@@ -2,6 +2,7 @@ import User from "../models/userModel.js";
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
 import { upload } from "../middlewares/uploadMiddleware.js";
+import LoginLog from '../models/LoginLog.js';
 
 // @desc    Register a new user
 // @route   POST /api/users/register
@@ -81,6 +82,12 @@ export const loginUser = async (req, res) => {
             process.env.JWT_SECRET,
             { expiresIn: "30d" }
         );
+
+        // Create login log
+        await new LoginLog({
+            userId: user._id,
+            action: 'login'
+        }).save();
 
         res.json({
             message: "Login successful",
@@ -176,6 +183,20 @@ export const updatePassword = async (req, res) => {
         await user.save();
 
         res.json({ message: "Password updated successfully" });
+    } catch (error) {
+        res.status(500).json({ message: error.message });
+    }
+};
+
+export const logout = async (req, res) => {
+    try {
+        // Create logout log
+        await new LoginLog({
+            userId: req.user._id,
+            action: 'logout'
+        }).save();
+
+        res.json({ message: 'Logged out successfully' });
     } catch (error) {
         res.status(500).json({ message: error.message });
     }
