@@ -1,4 +1,5 @@
 import express from "express";
+import path from "path";
 import cors from "cors";
 import 'dotenv/config';
 import bdConnect from "./config/dbConnect.js";
@@ -14,6 +15,7 @@ app.use(cors({
   allowedHeaders: "Content-Type,Authorization",
   credentials: true
 }));
+
 app.use(express.json());
 
 dbConnect();
@@ -33,3 +35,4 @@ app.listen(PORT, () => {
     console.log(`Server is running on port ${PORT}`);
     
 }); 
+
