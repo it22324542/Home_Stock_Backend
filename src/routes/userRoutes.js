@@ -3,7 +3,8 @@ import {
     registerUser,
     loginUser,
     getUserProfile,
-    updateUserProfile
+    updateUserProfile,
+    updatePassword
 } from "../controllers/userController.js";
 import { protect } from "../middlewares/authMiddleware.js";
 import { upload } from "../middlewares/uploadMiddleware.js"; // Import upload middleware
@@ -17,5 +18,6 @@ router.post("/signin", loginUser);
 // Protected routes (Require authentication)
 router.get("/profile", protect, getUserProfile);
 router.put("/profile", protect, upload.single("profilePic"), updateUserProfile);
+router.put("/password", protect, updatePassword);
 
 export default router;
